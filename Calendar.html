@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Calendar</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #202124;
+    background: #f8f9fa;
+}
+
+/* MAIN LAYOUT */
+
+.calendar-layout {
+    display: grid;
+    grid-template-columns: 245px 1fr;
+    height: 100vh;
+    background: white;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    border-right: 1px solid #dadce0;
+    padding: 18px 14px;
+    background: #fbfcfe;
+}
+
+.create-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 12px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px #00000018;
+    margin-bottom: 25px;
+}
+
+.create-btn:hover {
+    background: #f8f9fa;
+}
+
+.create-plus {
+    font-size: 28px;
+    font-weight: 300;
+}
+
+.mini-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.mini-nav button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    padding: 5px 9px;
+}
+
+.mini-nav button:hover {
+    background: #eee;
+}
+
+.mini-week,
+.mini-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.mini-week span {
+    font-size: 10px;
+    color: #5f6368;
+    padding: 10px 0;
+}
+
+.mini-day {
+    font-size: 11px;
+    padding: 7px 0;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mini-day:hover {
+    background: #eee;
+}
+
+.mini-day.today {
+    background: #1a73e8;
+    color: white;
+    font-weight: bold;
+}
+
+.mini-day.muted {
+    color: #9aa0a6;
+}
+
+.side-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 25px 10px 10px;
+}
+
+.side-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 9px;
+    font-size: 14px;
+}
+
+.check {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: #6b7fd7;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.green {
+    background: #34a853;
+}
+
+.brown {
+    background: #795548;
+}
+
+.blue {
+    background: #1a73e8;
+}
+
+.purple {
+    background: #7e57c2;
+}
+
+/* MAIN */
+
+.main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP BAR */
+
+.toolbar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    border-bottom: 1px solid #dadce0;
+}
+
+.hamburger {
+    font-size: 22px;
+    color: #5f6368;
+}
+
+.brand {
+    font-size: 22px;
+    margin-right: 25px;
+}
+
+.today-btn {
+    border: 1px solid #dadce0;
+    background: white;
+    border-radius: 22px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.today-btn:hover {
+    background: #f1f3f4;
+}
+
+.nav-btn {
+    border: none;
+    background: transparent;
+    font-size: 27px;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 5px 10px;
+}
+
+.nav-btn:hover {
+    background: #f1f3f4;
+}
+
+.toolbar-title {
+    font-size: 23px;
+    min-width: 190px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.icon-btn {
+    border: none;
+    background: transparent;
+    font-size: 21px;
+    padding: 9px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.icon-btn:hover {
+    background: #f1f3f4;
+}
+
+.view-select {
+    border: 1px solid #dadce0;
+    background: white;
+    border-radius: 22px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* CALENDAR */
+
+.calendar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.day-names {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid #dadce0;
+}
+
+.day-names div {
+    text-align: center;
+    padding: 11px;
+    font-size: 11px;
+    color: #5f6368;
+    font-weight: bold;
+}
+
+.month-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+}
+
+.day-cell {
+    border-right: 1px solid #dadce0;
+    border-bottom: 1px solid #dadce0;
+    padding: 5px;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.day-cell:hover {
+    background: #fafcff;
+}
+
+.date-number {
+    text-align: center;
+    font-size: 12px;
+    margin: 2px auto 7px;
+    width: 27px;
+    height: 27px;
+    line-height: 27px;
+    border-radius: 50%;
+}
+
+.date-number.today {
+    background: #1a73e8;
+    color: white;
+}
+
+.date-number.muted {
+    color: #9aa0a6;
+}
+
+/* EVENTS */
+
+.event {
+    font-size: 12px;
+    padding: 5px 7px;
+    margin: 3px 0;
+    border-radius: 6px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.event.blue {
+    background: #1a73e8;
+}
+
+.event.green {
+    background: #2eaf69;
+}
+
+.event.brown {
+    background: #795548;
+}
+
+.event.purple {
+    background: #7e57c2;
+}
+
+/* TASK PAGE */
+
+.task-page {
+    display: none;
+    padding: 25px;
+    background: white;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.task-page.active {
+    display: block;
+}
+
+.back-btn {
+    border: none;
+    background: transparent;
+    color: #1a73e8;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-date {
+    font-size: 26px;
+}
+
+.add-task-btn {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 22px;
+    padding: 11px 18px;
+    cursor: pointer;
+}
+
+.add-task-btn:hover {
+    background: #1765c0;
+}
+
+.task-list {
+    margin-top: 25px;
+    display: grid;
+    gap: 10px;
+}
+
+.task-card {
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-info {
+    flex: 1;
+}
+
+.task-title {
+    font-weight: bold;
+}
+
+.task-meta {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 5px;
+}
+
+.task-actions button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 17px;
+    padding: 7px;
+}
+
+.empty {
+    color: #5f6368;
+    padding: 40px;
+    text-align: center;
+    border: 1px dashed #dadce0;
+    border-radius: 12px;
+}
+
+/* WEEK VIEW */
+
+.week-view {
+    display: none;
+    grid-template-columns: 60px repeat(7, 1fr);
+    overflow-x: auto;
+}
+
+.week-view.active {
+    display: grid;
+}
+
+.time-column {
+    border-right: 1px solid #dadce0;
+}
+
+.time-label {
+    height: 65px;
+    border-bottom: 1px solid #eee;
+    font-size: 10px;
+    color: #5f6368;
+    padding: 5px;
+    text-align: right;
+}
+
+.week-column {
+    border-right: 1px solid #dadce0;
+    min-width: 90px;
+}
+
+.week-date {
+    height: 45px;
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+    border-bottom: 1px solid #dadce0;
+    font-weight: bold;
+}
+
+.hour {
+    height: 65px;
+    border-bottom: 1px solid #eee;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.hour:hover {
+    background: #f8faff;
+}
+
+/* DAY VIEW */
+
+.day-view {
+    display: none;
+    grid-template-columns: 60px 1fr;
+}
+
+.day-view.active {
+    display: grid;
+}
+
+.day-content {
+    min-height: 550px;
+}
+
+.day-header {
+    padding: 16px;
+    border-bottom: 1px solid #dadce0;
+    font-size: 18px;
+}
+
+/* YEAR VIEW */
+
+.year-grid {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 18px;
+    overflow-y: auto;
+}
+
+.year-grid.active {
+    display: grid;
+}
+
+.year-month {
+    border: 1px solid #dadce0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.year-month h4 {
+    text-align: center;
+    margin: 5px;
+}
+
+.year-mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 9px;
+}
+
+.year-mini span {
+    padding: 4px;
+    cursor: pointer;
+}
+
+.year-mini .has-task {
+    background: #1a73e8;
+    color: white;
+    border-radius: 50%;
+}
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: #0005;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    width: min(430px, 100%);
+    box-shadow: 0 8px 30px #0003;
+}
+
+.modal-box h3 {
+    margin-top: 0;
+}
+
+.field {
+    margin: 13px 0;
+}
+
+.field label {
+    display: block;
+    font-size: 12px;
+    color: #5f6368;
+    margin-bottom: 5px;
+}
+
+.field input,
+.field textarea,
+.field select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dadce0;
+    border-radius: 7px;
+    font: inherit;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+.modal-actions button {
+    padding: 9px 16px;
+    border-radius: 20px;
+    border: 1px solid #dadce0;
+    background: white;
+    cursor: pointer;
+}
+
+.modal-actions .save {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 800px) {
+
+    .calendar-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px;
+    }
+
+    .brand {
+        margin-right: 5px;
+    }
+
+    .toolbar-title {
+        font-size: 18px;
+        min-width: 120px;
+    }
+
+    .month-grid {
+        grid-template-rows: repeat(6, minmax(80px, 1fr));
+    }
+
+    .event {
+        font-size: 10px;
+    }
+
+    .year-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="calendar-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <button class="create-btn" id="createBtn">
+            <span class="create-plus">+</span>
+            <span>Create</span>
+        </button>
+
+        <div class="mini-header">
+            <span id="miniTitle"></span>
+
+            <div class="mini-nav">
+                <button id="miniPrev">‹</button>
+                <button id="miniNext">›</button>
+            </div>
+        </div>
+
+        <div class="mini-week">
+            <span>S</span>
+            <span>M</span>
+            <span>T</span>
+            <span>W</span>
+            <span>T</span>
+            <span>F</span>
+            <span>S</span>
+        </div>
+
+        <div class="mini-grid" id="miniGrid"></div>
+
+        <div class="side-title">
+            My calendars
+        </div>
+
+        <div class="side-item">
+            <span class="check blue">✓</span>
+            Project Calendar
+        </div>
+
+        <div class="side-item">
+            <span class="check green">✓</span>
+            Personal
+        </div>
+
+        <div class="side-item">
+            <span class="check brown">✓</span>
+            Important
+        </div>
+
+        <div class="side-item">
+            <span class="check purple">✓</span>
+            Tasks
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <section class="main">
+
+        <!-- TOOLBAR -->
+
+        <header class="toolbar">
+
+            <span class="hamburger">☰</span>
+
+            <span class="brand">
+                Calendar
+            </span>
+
+            <button class="today-btn" id="todayBtn">
+                Today
+            </button>
+
+            <button class="nav-btn" id="prevBtn">
+                ‹
+            </button>
+
+            <button class="nav-btn" id="nextBtn">
+                ›
+            </button>
+
+            <span class="toolbar-title" id="toolbarTitle"></span>
+
+            <span class="spacer"></span>
+
+            <button class="icon-btn">
+                🔍
+            </button>
+
+            <button class="icon-btn">
+                ⚙
+            </button>
+
+            <select class="view-select" id="viewSelect">
+                <option value="Month">Month</option>
+                <option value="Week">Week</option>
+                <option value="Day">Day</option>
+                <option value="Year">Year</option>
+            </select>
+
+        </header>
+
+
+        <!-- CALENDAR AREA -->
+
+        <div class="calendar" id="calendarArea">
+
+            <div class="day-names" id="dayNames">
+                <div>SUN</div>
+                <div>MON</div>
+                <div>TUE</div>
+                <div>WED</div>
+                <div>THU</div>
+                <div>FRI</div>
+                <div>SAT</div>
+            </div>
+
+            <div class="month-grid" id="monthGrid"></div>
+
+            <div class="week-view" id="weekView"></div>
+
+            <div class="day-view" id="dayView"></div>
+
+            <div class="year-grid" id="yearGrid"></div>
+
+        </div>
+
+
+        <!-- TASK PAGE -->
+
+        <section class="task-page" id="taskPage">
+
+            <button class="back-btn" id="backBtn">
+                ← Back to calendar
+            </button>
+
+            <div class="task-header">
+
+                <div class="task-date" id="taskDate"></div>
+
+                <button class="add-task-btn" id="panelAdd">
+                    + Add task
+                </button>
+
+            </div>
+
+            <div class="task-list" id="taskList"></div>
+
+        </section>
+
+    </section>
+
+</div>
+
+
+<!-- ADD / EDIT TASK MODAL -->
+
+<div class="modal" id="modal">
+
+    <form class="modal-box" id="taskForm">
+
+        <h3 id="modalTitle">
+            Add task
+        </h3>
+
+        <input type="hidden" id="editId">
+
+        <div class="field">
+
+            <label>
+                Task title
+            </label>
+
+            <input
+                id="taskTitle"
+                required
+                placeholder="Enter task title"
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Date
+            </label>
+
+            <input
+                id="taskDateInput"
+                type="date"
+                required
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Time
+            </label>
+
+            <input
+                id="taskTime"
+                type="time"
+            >
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                id="taskDescription"
+                rows="3"
+                placeholder="Add details"
+            ></textarea>
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Calendar
+            </label>
+
+            <select id="taskColor">
+
+                <option value="blue">
+                    Project Calendar
+                </option>
+
+                <option value="green">
+                    Personal
+                </option>
+
+                <option value="brown">
+                    Important
+                </option>
+
+                <option value="purple">
+                    Tasks
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                id="cancelBtn"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="save"
+                type="submit"
+            >
+                Save task
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+let current = new Date(2026, 8, 3);
+
+let view = "Month";
+
+let selectedDate = null;
+
+let tasks = [
+
+    {
+        id: 1,
+        title: "Project submission",
+        date: "2026-09-03",
+        time: "10:00",
+        description: "Complete and submit project work.",
+        color: "blue"
+    },
+
+    {
+        id: 2,
+        title: "Team meeting",
+        date: "2026-09-07",
+        time: "11:00",
+        description: "Discuss project progress.",
+        color: "green"
+    },
+
+    {
+        id: 3,
+        title: "Research work",
+        date: "2026-09-12",
+        time: "14:00",
+        description: "Continue project research.",
+        color: "purple"
+    },
+
+    {
+        id: 4,
+        title: "Electricity bill",
+        date: "2026-09-20",
+        time: "09:00",
+        description: "Pay monthly bill.",
+        color: "brown"
+    },
+
+    {
+        id: 5,
+        title: "Presentation preparation",
+        date: "2026-09-24",
+        time: "16:00",
+        description: "Prepare final presentation.",
+        color: "blue"
+    }
+
+];
+
+
+/* SHORTCUT */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+/* DATE KEY */
+
+function pad(number) {
+    return String(number).padStart(2, "0");
+}
+
+function dateKey(date) {
+
+    return date.getFullYear()
+        + "-"
+        + pad(date.getMonth() + 1)
+        + "-"
+        + pad(date.getDate());
+
+}
+
+
+/* DATE FORMAT */
+
+function dateLabel(date) {
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+/* GET TASKS FOR DATE */
+
+function getTasks(date) {
+
+    return tasks.filter(
+        task => task.date === dateKey(date)
+    );
+
+}
+
+
+/* MINI CALENDAR */
+
+function renderMiniCalendar() {
+
+    $("miniTitle").textContent =
+        current.toLocaleString(
+            "en-US",
+            {
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+    let year = current.getFullYear();
+
+    let month = current.getMonth();
+
+    let firstDay = new Date(
+        year,
+        month,
+        1
+    );
+
+    let startDay = firstDay.getDay();
+
+    let html = "";
+
+    for (let i = 0; i < 42; i++) {
+
+        let dayNumber =
+            i - startDay + 1;
+
+        let date =
+            new Date(
+                year,
+                month,
+                dayNumber
+            );
+
+        let muted =
+            date.getMonth() !== month;
+
+        let today =
+            dateKey(date) ===
+            dateKey(new Date());
+
+        html += `
+            <span
+                class="mini-day
+                ${muted ? "muted" : ""}
+                ${today ? "today" : ""}"
+                data-date="${dateKey(date)}"
+            >
+                ${date.getDate()}
+            </span>
+        `;
+
+    }
+
+    $("miniGrid").innerHTML = html;
+
+    document
+        .querySelectorAll(".mini-day")
+        .forEach(day => {
+
+            day.addEventListener(
+                "click",
+                function() {
+
+                    openTaskPage(
+                        this.dataset.date
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* MONTH VIEW */
+
+function renderMonth() {
+
+    $("dayNames").style.display = "grid";
+
+    $("monthGrid").style.display = "grid";
+
+    $("weekView").classList.remove("active");
+
+    $("dayView").classList.remove("active");
+
+    $("yearGrid").classList.remove("active");
+
+
+    let year = current.getFullYear();
+
+    let month = current.getMonth();
+
+    let firstDay =
+        new Date(
+            year,
+            month,
+            1
+        );
+
+    let startDay =
+        firstDay.getDay();
+
+    let html = "";
+
+    for (let i = 0; i < 42; i++) {
+
+        let number =
+            i - startDay + 1;
+
+        let date =
+            new Date(
+                year,
+                month,
+                number
+            );
+
+        let muted =
+            date.getMonth() !== month;
+
+        let today =
+            dateKey(date) ===
+            dateKey(new Date());
+
+        let dayTasks =
+            getTasks(date);
+
+
+        html += `
+            <div
+                class="day-cell"
+                data-date="${dateKey(date)}"
+            >
+
+                <div
+                    class="date-number
+                    ${today ? "today" : ""}
+                    ${muted ? "muted" : ""}"
+                >
+                    ${date.getDate()}
+                </div>
+
+                ${dayTasks.map(task => `
+
+                    <div
+                        class="event ${task.color}"
+                        data-task="${task.id}"
+                    >
+                        ${task.time ? task.time + " " : ""}
+                        ${escapeHTML(task.title)}
+                    </div>
+
+                `).join("")}
+
+            </div>
+        `;
+
+    }
+
+
+    $("monthGrid").innerHTML = html;
+
+
+    document
+        .querySelectorAll(".day-cell")
+        .forEach(cell => {
+
+            cell.addEventListener(
+                "click",
+                function(event) {
+
+                    if (
+                        !event.target.classList.contains("event")
+                    ) {
+
+                        openTaskPage(
+                            this.dataset.date
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll(".event")
+        .forEach(event => {
+
+            event.addEventListener(
+                "click",
+                function(e) {
+
+                    e.stopPropagation();
+
+                    editTask(
+                        Number(
+                            this.dataset.task
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* WEEK VIEW */
+
+function renderWeek() {
+
+    $("dayNames").style.display = "none";
+
+    $("monthGrid").style.display = "none";
+
+    $("weekView").classList.add("active");
+
+    $("dayView").classList.remove("active");
+
+    $("yearGrid").classList.remove("active");
+
+
+    let start = new Date(current);
+
+    start.setDate(
+        current.getDate() -
+        current.getDay()
+    );
+
+
+    let html = `
+
+        <div class="time-column">
+
+            <div class="week-date"></div>
+
+    `;
+
+
+    for (let hour = 9; hour < 18; hour++) {
+
+        html += `
+            <div class="time-label">
+                ${hour}:00
+            </div>
+        `;
+
+    }
+
+    html += "</div>";
+
+
+    for (let i = 0; i < 7; i++) {
+
+        let date = new Date(start);
+
+        date.setDate(
+            start.getDate() + i
+        );
+
+
+        html += `
+
+            <div class="week-column">
+
+                <div
+                    class="week-date"
+                    data-date="${dateKey(date)}"
+                >
+
+                    ${date.toLocaleString(
+                        "en-US",
+                        { weekday: "short" }
+                    )}
+
+                    <br>
+
+                    ${date.getDate()}
+
+                </div>
+
+        `;
+
+
+        for (let hour = 9; hour < 18; hour++) {
+
+            let hourTasks =
+                getTasks(date).filter(
+                    task =>
+                        task.time &&
+                        Number(
+                            task.time.split(":")[0]
+                        ) === hour
+                );
+
+
+            html += `
+
+                <div
+                    class="hour"
+                    data-date="${dateKey(date)}"
+                >
+
+                    ${hourTasks.map(task => `
+
+                        <div
+                            class="event ${task.color}"
+                            data-task="${task.id}"
+                        >
+                            ${escapeHTML(task.title)}
+                        </div>
+
+                    `).join("")}
+
+                </div>
+
+            `;
+
+        }
+
+        html += "</div>";
+
+    }
+
+
+    $("weekView").innerHTML = html;
+
+
+    document
+        .querySelectorAll(".hour")
+        .forEach(hour => {
+
+            hour.addEventListener(
+                "click",
+                function(event) {
+
+                    if (
+                        !event.target.classList.contains("event")
+                    ) {
+
+                        openTaskPage(
+                            this.dataset.date
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll("#weekView .event")
+        .forEach(event => {
+
+            event.addEventListener(
+                "click",
+                function(e) {
+
+                    e.stopPropagation();
+
+                    editTask(
+                        Number(
+                            this.dataset.task
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* DAY VIEW */
+
+function renderDay() {
+
+    $("dayNames").style.display = "none";
+
+    $("monthGrid").style.display = "none";
+
+    $("weekView").classList.remove("active");
+
+    $("dayView").classList.add("active");
+
+    $("yearGrid").classList.remove("active");
+
+
+    let html = `
+
+        <div class="time-column">
+
+    `;
+
+
+    for (let hour = 8; hour < 18; hour++) {
+
+        html += `
+            <div class="time-label">
+                ${hour}:00
+            </div>
+        `;
+
+    }
+
+    html += `
+        </div>
+
+        <div class="day-content">
+
+            <div class="day-header">
+                ${dateLabel(current)}
+            </div>
+    `;
+
+
+    for (let hour = 8; hour < 18; hour++) {
+
+        let hourTasks =
+            getTasks(current).filter(
+                task =>
+                    task.time &&
+                    Number(
+                        task.time.split(":")[0]
+                    ) === hour
+            );
+
+
+        html += `
+
+            <div
+                class="hour"
+                data-date="${dateKey(current)}"
+            >
+
+                ${hourTasks.map(task => `
+
+                    <div
+                        class="event ${task.color}"
+                        data-task="${task.id}"
+                    >
+                        ${task.time} —
+                        ${escapeHTML(task.title)}
+                    </div>
+
+                `).join("")}
+
+            </div>
+
+        `;
+
+    }
+
+
+    html += "</div>";
+
+
+    $("dayView").innerHTML = html;
+
+
+    document
+        .querySelectorAll("#dayView .hour")
+        .forEach(hour => {
+
+            hour.addEventListener(
+                "click",
+                function(event) {
+
+                    if (
+                        !event.target.classList.contains("event")
+                    ) {
+
+                        openTaskPage(
+                            this.dataset.date
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll("#dayView .event")
+        .forEach(event => {
+
+            event.addEventListener(
+                "click",
+                function(e) {
+
+                    e.stopPropagation();
+
+                    editTask(
+                        Number(
+                            this.dataset.task
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* YEAR VIEW */
+
+function renderYear() {
+
+    $("dayNames").style.display = "none";
+
+    $("monthGrid").style.display = "none";
+
+    $("weekView").classList.remove("active");
+
+    $("dayView").classList.remove("active");
+
+    $("yearGrid").classList.add("active");
+
+
+    let year =
+        current.getFullYear();
+
+    let html = "";
+
+
+    for (let month = 0; month < 12; month++) {
+
+        let firstDay =
+            new Date(
+                year,
+                month,
+                1
+            );
+
+        let days =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+        let start =
+            firstDay.getDay();
+
+
+        html += `
+
+            <div class="year-month">
+
+                <h4>
+                    ${firstDay.toLocaleString(
+                        "en-US",
+                        { month: "long" }
+                    )}
+                </h4>
+
+                <div class="year-mini">
+
+                    ${[
+                        "S",
+                        "M",
+                        "T",
+                        "W",
+                        "T",
+                        "F",
+                        "S"
+                    ].map(
+                        day => `<span>${day}</span>`
+                    ).join("")}
+
+        `;
+
+
+        for (let i = 0; i < start; i++) {
+
+            html += "<span></span>";
+
+        }
+
+
+        for (let day = 1; day <= days; day++) {
+
+            let date =
+                new Date(
+                    year,
+                    month,
+                    day
+                );
+
+            let hasTask =
+                getTasks(date).length > 0;
+
+
+            html += `
+
+                <span
+                    class="${hasTask ? "has-task" : ""}"
+                    data-date="${dateKey(date)}"
+                >
+                    ${day}
+                </span>
+
+            `;
+
+        }
+
+
+        html += `
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    $("yearGrid").innerHTML = html;
+
+
+    document
+        .querySelectorAll("#yearGrid [data-date]")
+        .forEach(day => {
+
+            day.addEventListener(
+                "click",
+                function() {
+
+                    openTaskPage(
+                        this.dataset.date
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* RENDER */
+
+function render() {
+
+    if (view === "Month") {
+
+        $("toolbarTitle").textContent =
+            current.toLocaleString(
+                "en-US",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        renderMonth();
+
+    }
+
+
+    else if (view === "Week") {
+
+        $("toolbarTitle").textContent =
+            "Week of " +
+            current.toLocaleDateString(
+                "en-US",
+                {
+                    month: "short",
+                    day: "numeric"
+                }
+            );
+
+        renderWeek();
+
+    }
+
+
+    else if (view === "Day") {
+
+        $("toolbarTitle").textContent =
+            dateLabel(current);
+
+        renderDay();
+
+    }
+
+
+    else {
+
+        $("toolbarTitle").textContent =
+            current.getFullYear();
+
+        renderYear();
+
+    }
+
+
+    renderMiniCalendar();
+
+}
+
+
+/* OPEN TASK PAGE */
+
+function openTaskPage(date) {
+
+    selectedDate = date;
+
+    let dateObject =
+        new Date(
+            date + "T00:00:00"
+        );
+
+
+    $("calendarArea").style.display = "none";
+
+    $("taskPage").classList.add("active");
+
+    $("taskDate").textContent =
+        dateLabel(dateObject);
+
+
+    renderTaskList();
+
+}
+
+
+/* RENDER TASKS */
+
+function renderTaskList() {
+
+    let dayTasks =
+        tasks.filter(
+            task =>
+                task.date === selectedDate
+        );
+
+
+    if (dayTasks.length === 0) {
+
+        $("taskList").innerHTML = `
+
+            <div class="empty">
+
+                No tasks for this day.
+
+                <br><br>
+
+                Click
+                <b>+ Add task</b>
+                to create one.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    $("taskList").innerHTML =
+        dayTasks.map(task => `
+
+            <div class="task-card">
+
+                <div class="check ${task.color}">
+                    ✓
+                </div>
+
+                <div class="task-info">
+
+                    <div class="task-title">
+                        ${escapeHTML(task.title)}
+                    </div>
+
+                    <div class="task-meta">
+
+                        ${task.time || "No time"}
+
+                        ${
+                            task.description
+                            ? " · " +
+                              escapeHTML(
+                                  task.description
+                              )
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="task-actions">
+
+                    <button
+                        data-edit="${task.id}"
+                        title="Edit"
+                    >
+                        ✎
+                    </button>
+
+                    <button
+                        data-delete="${task.id}"
+                        title="Delete"
+                    >
+                        🗑
+                    </button>
+
+                </div>
+
+            </div>
+
+        `);
+
+
+    document
+        .querySelectorAll("[data-edit]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    editTask(
+                        Number(
+                            this.dataset.edit
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+
+    document
+        .querySelectorAll("[data-delete]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    deleteTask(
+                        Number(
+                            this.dataset.delete
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* OPEN MODAL */
+
+function openModal(date = null, id = null) {
+
+    let task =
+        id
+        ? tasks.find(
+            item => item.id === id
+        )
+        : null;
+
+
+    $("modal").classList.add("show");
+
+
+    $("modalTitle").textContent =
+        task
+        ? "Edit task"
+        : "Add task";
+
+
+    $("editId").value =
+        task
+        ? task.id
+        : "";
+
+
+    $("taskTitle").value =
+        task
+        ? task.title
+        : "";
+
+
+    $("taskDateInput").value =
+        task
+        ? task.date
+        : (
+            date ||
+            selectedDate ||
+            dateKey(current)
+        );
+
+
+    $("taskTime").value =
+        task
+        ? task.time
+        : "";
+
+
+    $("taskDescription").value =
+        task
+        ? task.description
+        : "";
+
+
+    $("taskColor").value =
+        task
+        ? task.color
+        : "blue";
+
+
+    $("taskTitle").focus();
+
+}
+
+
+/* EDIT TASK */
+
+function editTask(id) {
+
+    openModal(
+        null,
+        id
+    );
+
+}
+
+
+/* DELETE TASK */
+
+function deleteTask(id) {
+
+    if (
+        !confirm(
+            "Are you sure you want to delete this task?"
+        )
+    ) {
+        return;
+    }
+
+
+    tasks =
+        tasks.filter(
+            task =>
+                task.id !== id
+        );
+
+
+    renderTaskList();
+
+    render();
+
+}
+
+
+/* ESCAPE HTML */
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            function(char) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[char];
+
+            }
+        );
+
+}
+
+
+/* SAVE TASK */
+
+$("taskForm").addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        let id =
+            $("editId").value;
+
+
+        let task = {
+
+            id:
+                id
+                ? Number(id)
+                : Date.now(),
+
+            title:
+                $("taskTitle")
+                    .value
+                    .trim(),
+
+            date:
+                $("taskDateInput")
+                    .value,
+
+            time:
+                $("taskTime")
+                    .value,
+
+            description:
+                $("taskDescription")
+                    .value
+                    .trim(),
+
+            color:
+                $("taskColor")
+                    .value
+
+        };
+
+
+        if (
+            !task.title ||
+            !task.date
+        ) {
+
+            return;
+
+        }
+
+
+        if (id) {
+
+            let index =
+                tasks.findIndex(
+                    item =>
+                        item.id ===
+                        Number(id)
+                );
+
+            tasks[index] =
+                task;
+
+        }
+
+        else {
+
+            tasks.push(task);
+
+        }
+
+
+        $("modal").classList.remove(
+            "show"
+        );
+
+
+        selectedDate =
+            task.date;
+
+
+        openTaskPage(
+            task.date
+        );
+
+    }
+);
+
+
+/* CANCEL */
+
+$("cancelBtn").addEventListener(
+    "click",
+    function() {
+
+        $("modal").classList.remove(
+            "show"
+        );
+
+    }
+);
+
+
+/* CREATE */
+
+$("createBtn").addEventListener(
+    "click",
+    function() {
+
+        openModal();
+
+    }
+);
+
+
+/* ADD FROM TASK PAGE */
+
+$("panelAdd").addEventListener(
+    "click",
+    function() {
+
+        openModal(
+            selectedDate
+        );
+
+    }
+);
+
+
+/* BACK */
+
+$("backBtn").addEventListener(
+    "click",
+    function() {
+
+        $("taskPage")
+            .classList.remove(
+                "active"
+            );
+
+        $("calendarArea").style.display =
+            "flex";
+
+        render();
+
+    }
+);
+
+
+/* TODAY */
+
+$("todayBtn").addEventListener(
+    "click",
+    function() {
+
+        current =
+            new Date();
+
+        render();
+
+    }
+);
+
+
+/* PREVIOUS */
+
+$("prevBtn").addEventListener(
+    "click",
+    function() {
+
+        if (view === "Month") {
+
+            current.setMonth(
+                current.getMonth() - 1
+            );
+
+        }
+
+        else if (view === "Year") {
+
+            current.setFullYear(
+                current.getFullYear() - 1
+            );
+
+        }
+
+        else if (view === "Week") {
+
+            current.setDate(
+                current.getDate() - 7
+            );
+
+        }
+
+        else {
+
+            current.setDate(
+                current.getDate() - 1
+            );
+
+        }
+
+
+        render();
+
+    }
+);
+
+
+/* NEXT */
+
+$("nextBtn").addEventListener(
+    "click",
+    function() {
+
+        if (view === "Month") {
+
+            current.setMonth(
+                current.getMonth() + 1
+            );
+
+        }
+
+        else if (view === "Year") {
+
+            current.setFullYear(
+                current.getFullYear() + 1
+            );
+
+        }
+
+        else if (view === "Week") {
+
+            current.setDate(
+                current.getDate() + 7
+            );
+
+        }
+
+        else {
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+
+        render();
+
+    }
+);
+
+
+/* CHANGE VIEW */
+
+$("viewSelect").addEventListener(
+    "change",
+    function() {
+
+        view =
+            this.value;
+
+
+        $("taskPage")
+            .classList.remove(
+                "active"
+            );
+
+
+        $("calendarArea").style.display =
+            "flex";
+
+
+        render();
+
+    }
+);
+
+
+/* MINI PREVIOUS */
+
+$("miniPrev").addEventListener(
+    "click",
+    function() {
+
+        current.setMonth(
+            current.getMonth() - 1
+        );
+
+        render();
+
+    }
+);
+
+
+/* MINI NEXT */
+
+$("miniNext").addEventListener(
+    "click",
+    function() {
+
+        current.setMonth(
+            current.getMonth() + 1
+        );
+
+        render();
+
+    }
+);
+
+
+/* INITIAL LOAD */
+
+render();
+
+</script>
+
+</body>
+</html>

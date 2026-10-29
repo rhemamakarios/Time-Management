@@ -1,0 +1,5433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Focus Dashboard</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f8fa;
+    color: #202124;
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   MAIN DASHBOARD
+===================================================== */
+
+.dashboard {
+
+    width: 100%;
+    height: 100vh;
+
+    padding: 18px 22px;
+
+    display: grid;
+
+    grid-template-columns: 48% 52%;
+
+    gap: 18px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   LEFT COLUMN
+===================================================== */
+
+.left-column {
+
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1.35fr)
+        minmax(0, 1fr);
+
+    gap: 18px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   RIGHT COLUMN
+===================================================== */
+
+.right-column {
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card {
+
+    background: white;
+
+    border: 1px solid #dedede;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 1px 3px rgba(0,0,0,0.06);
+
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* =====================================================
+   FOCUS CARD
+===================================================== */
+
+.focus-card {
+
+    height: 100%;
+
+    padding: 18px 24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+.card-top {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+
+.card-title {
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+
+.menu {
+
+    position: relative;
+
+    font-size: 24px;
+
+    color: #555;
+
+    cursor: pointer;
+}
+
+.focus-menu-button {
+
+    border: none;
+
+    background: transparent;
+
+    color: #555;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    padding: 2px 6px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.focus-menu-button:hover {
+    background: #f1f3f4;
+}
+
+.focus-menu-panel {
+
+    position: absolute;
+
+    top: 34px;
+
+    right: 0;
+
+    width: 270px;
+
+    background: white;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+
+    padding: 7px;
+
+    z-index: 50;
+
+    display: none;
+
+    text-align: left;
+}
+
+.focus-menu-panel.show {
+    display: block;
+}
+
+.focus-menu-section {
+    padding: 7px 8px 4px;
+
+    font-size: 11px;
+
+    color: #777;
+
+    font-weight: 600;
+}
+
+.focus-menu-row {
+
+    width: 100%;
+
+    min-height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 7px 8px;
+
+    border: none;
+
+    background: transparent;
+
+    border-radius: 7px;
+
+    font-size: 13px;
+
+    color: #333;
+
+    cursor: pointer;
+}
+
+.focus-menu-row:hover {
+    background: #f3f4f5;
+}
+
+.focus-menu-row .menu-value {
+    color: #777;
+    font-size: 12px;
+}
+
+.focus-menu-divider {
+    height: 1px;
+    background: #eee;
+    margin: 5px 4px;
+}
+
+.focus-menu-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.focus-menu-check input {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* =====================================================
+   FOCUS TEXT
+===================================================== */
+
+.focus-heading {
+
+    font-size: 27px;
+
+    font-weight: 500;
+
+    margin-top: 18px;
+
+    margin-bottom: 7px;
+
+    flex-shrink: 0;
+}
+
+
+.focus-description {
+
+    max-width: 560px;
+
+    color: #666;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+.timer-container {
+
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 19px;
+
+    flex-shrink: 0;
+}
+
+
+.timer-box {
+
+    width: 300px;
+
+    height: 125px;
+
+    border: 1px solid #d8d8d8;
+
+    border-radius: 11px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 55px;
+
+    overflow: hidden;
+
+    background: white;
+}
+
+
+/* =====================================================
+   TIMER INPUT AREA
+===================================================== */
+
+.timer-display {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 4px;
+}
+
+
+.time-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+
+.time-input {
+
+    width: 72px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    text-align: center;
+
+    font-size: 43px;
+
+    font-weight: 400;
+
+    color: #202124;
+
+    padding: 0;
+}
+
+
+/*
+   Prevent number arrows
+*/
+
+.time-input::-webkit-inner-spin-button,
+.time-input::-webkit-outer-spin-button {
+
+    -webkit-appearance: none;
+
+    margin: 0;
+
+}
+
+
+.time-label {
+
+    font-size: 11px;
+
+    color: #777;
+
+    margin-top: 2px;
+}
+
+
+.time-separator {
+
+    font-size: 40px;
+
+    margin-top: -13px;
+
+    color: #333;
+}
+
+
+/* =====================================================
+   TIMER ARROWS
+===================================================== */
+
+.arrow-container {
+
+    display: flex;
+
+    flex-direction: column;
+
+    border-left: 1px solid #d8d8d8;
+}
+
+
+.arrow-btn {
+
+    flex: 1;
+
+    border: none;
+
+    background: white;
+
+    font-size: 23px;
+
+    color: #555;
+
+    cursor: pointer;
+}
+
+
+.arrow-btn:first-child {
+
+    border-bottom: 1px solid #d8d8d8;
+}
+
+
+.arrow-btn:hover {
+
+    background: #f2f3f4;
+}
+
+
+/* =====================================================
+   BREAK
+===================================================== */
+
+.break-text {
+
+    margin-top: 13px;
+
+    font-size: 15px;
+
+    flex-shrink: 0;
+}
+
+
+.break-option {
+
+    margin-top: 7px;
+
+    color: #777;
+
+    font-size: 14px;
+
+    flex-shrink: 0;
+}
+
+
+.break-option input {
+
+    width: 17px;
+
+    height: 17px;
+
+    vertical-align: middle;
+
+    margin-right: 5px;
+}
+
+
+/* =====================================================
+   TIMER BUTTONS
+===================================================== */
+
+.timer-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 12px;
+
+    flex-shrink: 0;
+}
+
+
+.start-button {
+    min-width: 210px;
+
+    border: none;
+
+    background: #247c8a;
+
+    color: white;
+
+    border-radius: 7px;
+
+    padding: 10px 21px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+.start-button:hover {
+
+    background: #1d6975;
+}
+
+
+.stop-button {
+
+    border: 1px solid #cfcfcf;
+
+    background: white;
+
+    color: #333;
+
+    border-radius: 7px;
+
+    padding: 10px 19px;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+.stop-button:hover {
+
+    background: #f3f3f3;
+}
+
+
+.skip-break-button {
+    border: 1px solid #cfcfcf;
+    background: white;
+    color: #333;
+    border-radius: 7px;
+    padding: 10px 19px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.skip-break-button:hover {
+    background: #f3f3f3;
+}
+
+
+.session-status {
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    color: #777;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   DAILY PROGRESS
+===================================================== */
+
+.progress-card {
+
+    height: 100%;
+
+    padding: 18px 24px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+.progress-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    flex-shrink: 0;
+}
+
+
+.edit-goal {
+
+    border: 1px solid transparent;
+
+    background: transparent;
+
+    font-size: 21px;
+
+    color: #444;
+
+    cursor: pointer;
+
+    padding: 4px 7px;
+
+    border-radius: 5px;
+}
+
+
+.edit-goal:hover {
+
+    background: #f1f3f4;
+
+    border-color: #ddd;
+}
+
+
+.progress-area {
+
+    flex: 1;
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 150px 1fr;
+
+    align-items: center;
+
+    justify-items: center;
+
+    text-align: center;
+
+    gap: 15px;
+}
+
+
+.progress-side-label {
+
+    font-size: 14px;
+
+    color: #555;
+}
+
+
+.progress-side-number {
+
+    font-size: 36px;
+
+    margin: 5px 0;
+}
+
+
+/* =====================================================
+   PROGRESS CIRCLE
+===================================================== */
+
+.progress-circle {
+
+    width: 150px;
+
+    height: 150px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #247c8a 0%,
+            #eeeeee 0%
+        );
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+}
+
+
+.progress-circle::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 118px;
+
+    height: 118px;
+
+    border-radius: 50%;
+
+    background: white;
+}
+
+
+.progress-content {
+
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+}
+
+
+.goal-label {
+
+    font-size: 14px;
+}
+
+
+.goal-number {
+
+    font-size: 38px;
+
+    margin: 4px 0;
+}
+
+
+.goal-unit {
+
+    font-size: 13px;
+}
+
+
+.completed-text {
+
+    text-align: center;
+
+    font-size: 16px;
+
+    margin-top: 5px;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   TASK CARD
+===================================================== */
+
+.tasks-card {
+
+    height: 100%;
+
+    padding: 18px 22px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+.tasks-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+
+.tasks-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+
+.task-icon {
+
+    color: #247c8a;
+
+    font-size: 24px;
+}
+
+
+.add-task-button {
+
+    width: 35px;
+
+    height: 35px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 29px;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+}
+
+
+.add-task-button:hover {
+
+    background: #f1f3f4;
+}
+
+
+/* =====================================================
+   VIEW BUTTONS
+===================================================== */
+
+.view-buttons {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    margin-top: 8px;
+
+    padding-bottom: 9px;
+
+    border-bottom: 1px solid #ddd;
+
+    flex-shrink: 0;
+}
+
+
+.view-button {
+
+    border: none;
+
+    background: transparent;
+
+    color: #555;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+
+.view-button:hover {
+
+    background: #f1f3f4;
+}
+
+
+.view-button.active {
+
+    background: #d8edf1;
+
+    color: #17616d;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   IMPORTANT:
+   ONLY ONE TASK VIEW IS SHOWN AT A TIME
+===================================================== */
+
+.task-content {
+
+    flex: 1;
+
+    min-height: 0;
+
+    margin-top: 10px;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+
+.task-list,
+.calendar-container {
+
+    width: 100%;
+
+    height: 100%;
+}
+
+
+.task-list {
+
+    overflow-y: auto;
+
+    padding-right: 3px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/*
+   Calendar is hidden by default.
+*/
+
+.calendar-container {
+
+    display: none;
+
+    overflow: hidden;
+}
+
+
+/*
+   These classes are controlled
+   by JavaScript.
+*/
+
+.task-content.show-daily
+.task-list {
+
+    display: flex;
+}
+
+
+.task-content.show-calendar
+.task-list {
+
+    display: none;
+}
+
+
+.task-content.show-calendar
+.calendar-container {
+
+    display: block;
+}
+
+
+/* =====================================================
+   TASK ITEM
+===================================================== */
+
+.task-item {
+
+    min-height: 65px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 9px;
+
+    padding: 10px 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    flex-shrink: 0;
+}
+
+
+.task-checkbox {
+
+    width: 19px;
+
+    height: 19px;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+
+.task-details {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.task-name {
+
+    font-size: 15px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.task-time {
+
+    color: #777;
+
+    font-size: 12px;
+
+    margin-top: 4px;
+}
+
+
+.task-completed {
+
+    text-decoration: line-through;
+
+    color: #999;
+}
+
+
+.task-actions {
+
+    display: flex;
+
+    gap: 2px;
+}
+
+
+.task-action {
+
+    border: none;
+
+    background: transparent;
+
+    padding: 5px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    border-radius: 5px;
+}
+
+
+.task-action:hover {
+
+    background: #eee;
+}
+
+
+/* =====================================================
+   MONTH VIEW
+===================================================== */
+
+.month-header {
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.month-title {
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+.calendar-nav {
+
+    display: flex;
+
+    gap: 2px;
+}
+
+
+.calendar-nav button {
+
+    width: 28px;
+
+    height: 28px;
+
+    border: none;
+
+    background: transparent;
+
+    border-radius: 50%;
+
+    font-size: 19px;
+
+    cursor: pointer;
+}
+
+
+.calendar-nav button:hover {
+
+    background: #eee;
+}
+
+
+.calendar-weekdays {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    text-align: center;
+
+    color: #777;
+
+    font-size: 10px;
+
+    margin-bottom: 3px;
+}
+
+
+.month-grid {
+
+    height: calc(100% - 38px);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    grid-template-rows:
+        repeat(6, 1fr);
+
+    gap: 3px;
+}
+
+
+.calendar-day {
+
+    min-height: 0;
+
+    border: 1px solid #ededed;
+
+    border-radius: 5px;
+
+    padding: 5px;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    font-size: 11px;
+}
+
+
+.calendar-day:hover {
+
+    background: #f2f8fa;
+}
+
+
+.calendar-day.other-month {
+
+    color: #aaa;
+}
+
+
+.calendar-day.today {
+
+    border: 2px solid #247c8a;
+}
+
+
+.day-number {
+
+    font-weight: 600;
+}
+
+
+.day-task-dot {
+
+    margin-top: 4px;
+
+    background: #247c8a;
+
+    color: white;
+
+    border-radius: 3px;
+
+    padding: 3px;
+
+    font-size: 8px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   WEEK VIEW
+===================================================== */
+
+.week-view {
+
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+
+    overflow: hidden;
+}
+
+
+.week-day {
+
+    min-width: 0;
+
+    height: 100%;
+
+    border: 1px solid #ddd;
+
+    border-radius: 7px;
+
+    padding: 6px;
+
+    overflow-y: auto;
+
+    cursor: pointer;
+}
+
+
+.week-day:hover {
+
+    background: #f5fafb;
+}
+
+
+.week-day-header {
+
+    text-align: center;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    padding-bottom: 7px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.week-task {
+
+    margin-top: 5px;
+
+    padding: 5px;
+
+    background: #247c8a;
+
+    color: white;
+
+    border-radius: 4px;
+
+    font-size: 9px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   YEAR VIEW
+===================================================== */
+
+.year-view {
+
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    grid-template-rows:
+        repeat(4, 1fr);
+
+    gap: 6px;
+
+    overflow: hidden;
+}
+
+
+.year-month {
+
+    border: 1px solid #ddd;
+
+    border-radius: 6px;
+
+    padding: 5px;
+
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+
+.year-month-title {
+
+    text-align: center;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    margin-bottom: 3px;
+}
+
+
+.year-days {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    text-align: center;
+
+    font-size: 7px;
+}
+
+
+.year-day {
+
+    padding: 2px;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+}
+
+
+.year-day:hover {
+
+    background: #eee;
+}
+
+
+.year-day.has-task {
+
+    background: #247c8a;
+
+    color: white;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.35);
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 100;
+}
+
+
+.modal.show {
+
+    display: flex;
+}
+
+
+.modal-box {
+
+    width: 420px;
+
+    max-width: 90%;
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 23px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.2);
+}
+
+
+.modal-title {
+
+    font-size: 21px;
+
+    font-weight: 600;
+
+    margin-bottom: 18px;
+}
+
+
+.form-group {
+
+    margin-bottom: 13px;
+}
+
+
+.form-group label {
+
+    display: block;
+
+    color: #666;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+}
+
+
+.form-group input,
+.form-group textarea {
+
+    width: 100%;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    padding: 9px;
+
+    font-size: 14px;
+}
+
+
+.form-buttons {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+.cancel-btn {
+
+    border: 1px solid #ccc;
+
+    background: white;
+
+    padding: 8px 18px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+
+.save-btn {
+
+    border: none;
+
+    background: #247c8a;
+
+    color: white;
+
+    padding: 8px 20px;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+
+
+/* =====================================================
+   FOCUS THREE-DOT MENU
+===================================================== */
+
+.menu-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.menu {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    color: #555;
+    cursor: pointer;
+    padding: 3px 7px;
+    border-radius: 6px;
+}
+
+.menu:hover {
+    background: #f1f3f4;
+}
+
+.focus-menu {
+    display: none;
+    position: absolute;
+    top: 38px;
+    right: 0;
+    width: 235px;
+    max-height: 270px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 7px 22px rgba(0,0,0,0.14);
+    z-index: 50;
+    overflow: hidden;
+}
+
+.focus-menu.show {
+    display: block;
+}
+
+.focus-menu-scroll {
+    max-height: 270px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.focus-menu-section {
+    padding: 7px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.focus-menu-section:last-child {
+    border-bottom: none;
+}
+
+.focus-menu-label {
+    font-size: 11px;
+    color: #777;
+    padding: 3px 9px 5px;
+    font-weight: 600;
+}
+
+.focus-menu-option {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 8px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.focus-menu-option:hover {
+    background: #f1f3f4;
+}
+
+.focus-menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 9px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.focus-menu-toggle:hover {
+    background: #f1f3f4;
+}
+
+.focus-menu-toggle input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+/* =====================================================
+   SMALL SCREEN
+===================================================== */
+
+@media(max-width: 900px) {
+
+    body {
+
+        overflow: auto;
+
+    }
+
+
+    .dashboard {
+
+        height: auto;
+
+        min-height: 100vh;
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .left-column {
+
+        grid-template-rows:
+            auto auto;
+
+    }
+
+
+    .focus-card,
+    .progress-card,
+    .tasks-card {
+
+        min-height: 420px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     MAIN DASHBOARD
+===================================================== -->
+
+<div class="dashboard">
+
+
+<!-- =====================================================
+     LEFT COLUMN
+===================================================== -->
+
+<div class="left-column">
+
+
+<!-- =====================================================
+     FOCUS
+===================================================== -->
+
+<div class="card focus-card">
+
+
+    <div class="card-top">
+
+        <div class="card-title">
+            Focus
+        </div>
+
+        <div class="menu" id="focusMenu">
+
+            <button
+                class="focus-menu-button"
+                id="focusMenuButton"
+                type="button"
+                aria-label="Focus settings"
+            >
+                ⋯
+            </button>
+
+            <div
+                class="focus-menu-panel"
+                id="focusMenuPanel"
+            >
+
+                <div class="focus-menu-scroll">
+
+                <div class="focus-menu-section">
+                    Focus duration
+                </div>
+
+                <button class="focus-menu-row" type="button" data-focus-preset="25">
+                    <span>25 minutes</span>
+                    <span class="menu-value">Preset</span>
+                </button>
+
+                <button class="focus-menu-row" type="button" data-focus-preset="45">
+                    <span>45 minutes</span>
+                    <span class="menu-value">Preset</span>
+                </button>
+
+                <button class="focus-menu-row" type="button" data-focus-preset="60">
+                    <span>60 minutes</span>
+                    <span class="menu-value">Preset</span>
+                </button>
+
+                <div class="focus-menu-divider"></div>
+
+                <div class="focus-menu-section">
+                    Break duration
+                </div>
+
+                <button class="focus-menu-row" type="button" data-break-duration="5">
+                    <span>5 minutes</span>
+                    <span class="menu-value">Default</span>
+                </button>
+
+                <button class="focus-menu-row" type="button" data-break-duration="10">
+                    <span>10 minutes</span>
+                    <span class="menu-value">Set</span>
+                </button>
+
+                <button class="focus-menu-row" type="button" data-break-duration="15">
+                    <span>15 minutes</span>
+                    <span class="menu-value">Set</span>
+                </button>
+
+                <div class="focus-menu-divider"></div>
+
+                <label class="focus-menu-row focus-menu-check">
+                    <span>Auto-start break</span>
+                    <input type="checkbox" id="autoStartBreak" checked>
+                </label>
+
+                <label class="focus-menu-row focus-menu-check">
+                    <span>Auto-start next focus</span>
+                    <input type="checkbox" id="autoStartFocus">
+                </label>
+
+                <label class="focus-menu-row focus-menu-check">
+                    <span>Sound</span>
+                    <input type="checkbox" id="soundEnabled" checked>
+                </label>
+
+                <label class="focus-menu-row focus-menu-check">
+                    <span>Notifications</span>
+                    <input type="checkbox" id="notificationsEnabled">
+                </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="focus-heading">
+        Get ready to focus
+    </div>
+
+
+    <!-- =================================================
+         TIMER
+    ================================================= -->
+
+    <div class="timer-container">
+
+
+        <div class="timer-box">
+
+
+            <div class="timer-display">
+
+
+                <!-- HOURS -->
+
+                <div class="time-group">
+
+                    <input
+                        class="time-input"
+                        id="hoursInput"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                    >
+
+                    <span class="time-label">
+                        hrs
+                    </span>
+
+                </div>
+
+
+                <span class="time-separator">
+                    :
+                </span>
+
+
+                <!-- MINUTES -->
+
+                <div class="time-group">
+
+                    <input
+                        class="time-input"
+                        id="minutesInput"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="25"
+                    >
+
+                    <span class="time-label">
+                        mins
+                    </span>
+
+                </div>
+
+
+                <span class="time-separator">
+                    :
+                </span>
+
+
+                <!-- SECONDS -->
+
+                <div class="time-group">
+
+                    <input
+                        class="time-input"
+                        id="secondsInput"
+                        type="text"
+                        inputmode="numeric"
+                        maxlength="2"
+                        value="00"
+                    >
+
+                    <span class="time-label">
+                        secs
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ARROWS -->
+
+            <div class="arrow-container">
+
+                <button
+                    class="arrow-btn"
+                    id="increaseTime"
+                    type="button"
+                >
+                    ▲
+                </button>
+
+
+                <button
+                    class="arrow-btn"
+                    id="decreaseTime"
+                    type="button"
+                >
+                    ▼
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- BREAK -->
+
+    <div class="break-text">
+
+        Break after focus session:
+        <strong id="breakDurationText">5 minutes</strong>
+
+    </div>
+
+
+    <div class="break-option">
+
+        <label>
+
+            <input
+                type="checkbox"
+                id="skipBreak"
+            >
+
+            Skip break
+
+        </label>
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="timer-buttons">
+
+
+        <button
+            class="start-button"
+            id="startTimer"
+            type="button"
+        >
+            ▶ Start focus session
+        </button>
+
+
+        <button
+            class="skip-break-button"
+            id="skipBreakButton"
+            type="button"
+            style="display:none;"
+        >
+            ↪ Skip break &amp; start focus
+        </button>
+
+
+        <button
+            class="stop-button"
+            id="stopTimer"
+            type="button"
+        >
+            ■ Stop
+        </button>
+
+
+    </div>
+
+
+    <div
+        class="session-status"
+        id="sessionStatus"
+    >
+        Ready to start
+    </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     DAILY PROGRESS
+===================================================== -->
+
+<div class="card progress-card">
+
+
+    <div class="progress-title">
+
+        <span>
+            Daily progress
+        </span>
+
+
+        <button
+            class="edit-goal"
+            id="editGoal"
+            type="button"
+        >
+            ✎
+        </button>
+
+    </div>
+
+
+    <div class="progress-area">
+
+
+        <div>
+
+            <div class="progress-side-label">
+                Yesterday
+            </div>
+
+
+            <div
+                class="progress-side-number"
+                id="yesterdayMinutes"
+            >
+                0
+            </div>
+
+
+            <div class="progress-side-label">
+                minutes
+            </div>
+
+        </div>
+
+
+        <div class="progress-circle">
+
+            <div class="progress-content">
+
+                <div class="goal-label">
+                    Daily goal
+                </div>
+
+
+                <div
+                    class="goal-number"
+                    id="goalNumber"
+                >
+                    1
+                </div>
+
+
+                <div class="goal-unit">
+                    hour
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="progress-side-label">
+                Streak
+            </div>
+
+
+            <div
+                class="progress-side-number"
+                id="streakNumber"
+            >
+                0
+            </div>
+
+
+            <div class="progress-side-label">
+                days
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div
+        class="completed-text"
+        id="completedText"
+    >
+        Completed: 0 minutes
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     RIGHT COLUMN
+===================================================== -->
+
+<div class="right-column">
+
+
+<div class="card tasks-card">
+
+
+    <!-- TASK HEADER -->
+
+    <div class="tasks-header">
+
+
+        <div class="tasks-title">
+
+            <span class="task-icon">
+                ✓
+            </span>
+
+            Tasks
+
+        </div>
+
+
+        <button
+            class="add-task-button"
+            id="addTaskButton"
+            type="button"
+        >
+            +
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================================
+         VIEW SWITCHER
+    ================================================= -->
+
+    <div class="view-buttons">
+
+
+        <button
+            class="view-button active"
+            data-view="daily"
+            type="button"
+        >
+            Daily
+        </button>
+
+
+        <button
+            class="view-button"
+            data-view="weekly"
+            type="button"
+        >
+            Weekly
+        </button>
+
+
+        <button
+            class="view-button"
+            data-view="monthly"
+            type="button"
+        >
+            Monthly
+        </button>
+
+
+        <button
+            class="view-button"
+            data-view="yearly"
+            type="button"
+        >
+            Yearly
+        </button>
+
+
+    </div>
+
+
+    <!-- =================================================
+         TASK CONTENT
+    ================================================= -->
+
+    <div
+        class="task-content show-daily"
+        id="taskContent"
+    >
+
+
+        <div
+            class="task-list"
+            id="dailyTasks"
+        ></div>
+
+
+        <div
+            class="calendar-container"
+            id="calendarContainer"
+        ></div>
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     TASK MODAL
+===================================================== -->
+
+<div
+    class="modal"
+    id="taskModal"
+>
+
+
+<form
+    class="modal-box"
+    id="taskForm"
+>
+
+
+    <div class="modal-title">
+
+        <span id="modalHeading">
+            Add task
+        </span>
+
+    </div>
+
+
+    <input
+        type="hidden"
+        id="editTaskId"
+    >
+
+
+    <div class="form-group">
+
+        <label>
+            Task name
+        </label>
+
+        <input
+            type="text"
+            id="taskName"
+            required
+            placeholder="Enter task"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Date
+        </label>
+
+        <input
+            type="date"
+            id="taskDate"
+            required
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Time
+        </label>
+
+        <input
+            type="time"
+            id="taskTime"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Description
+        </label>
+
+        <textarea
+            id="taskDescription"
+            rows="3"
+            placeholder="Task details"
+        ></textarea>
+
+    </div>
+
+
+    <div class="form-buttons">
+
+        <button
+            type="button"
+            class="cancel-btn"
+            id="cancelTask"
+        >
+            Cancel
+        </button>
+
+
+        <button
+            type="submit"
+            class="save-btn"
+        >
+            Save
+        </button>
+
+    </div>
+
+
+</form>
+
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   TIMER VARIABLES
+===================================================== */
+
+let focusMinutes = 25;
+
+let focusSeconds = 0;
+
+let breakDurationMinutes = 5;
+
+let breakTotalSeconds = breakDurationMinutes * 60;
+
+let autoStartBreak = true;
+
+let autoStartFocus = false;
+
+let soundEnabled = true;
+
+let notificationsEnabled = false;
+
+let remainingSeconds =
+    (focusMinutes * 60)
+    +
+    focusSeconds;
+
+let timer = null;
+
+let timerRunning = false;
+let timerPaused = false;
+
+let breakMode = false;
+
+
+/* =====================================================
+   TIMER ELEMENTS
+===================================================== */
+
+const hoursInput =
+    document.getElementById(
+        "hoursInput"
+    );
+
+const minutesInput =
+    document.getElementById(
+        "minutesInput"
+    );
+
+const secondsInput =
+    document.getElementById(
+        "secondsInput"
+    );
+
+const startTimer =
+    document.getElementById(
+        "startTimer"
+    );
+
+const stopTimer =
+    document.getElementById(
+        "stopTimer"
+    );
+
+const skipBreakButton =
+    document.getElementById(
+        "skipBreakButton"
+    );
+
+const increaseTime =
+    document.getElementById(
+        "increaseTime"
+    );
+
+const decreaseTime =
+    document.getElementById(
+        "decreaseTime"
+    );
+
+const sessionStatus =
+    document.getElementById(
+        "sessionStatus"
+    );
+
+const skipBreak =
+    document.getElementById(
+        "skipBreak"
+    );
+
+
+function updateSkipBreakButtonVisibility() {
+
+    skipBreakButton.style.display =
+        breakMode
+            ? "inline-flex"
+            : "none";
+
+}
+
+
+/* =====================================================
+   FOCUS MENU SETTINGS
+===================================================== */
+
+const focusMenuButton =
+    document.getElementById(
+        "focusMenuButton"
+    );
+
+const focusMenuPanel =
+    document.getElementById(
+        "focusMenuPanel"
+    );
+
+const breakDurationText =
+    document.getElementById(
+        "breakDurationText"
+    );
+
+const autoStartBreakInput =
+    document.getElementById(
+        "autoStartBreak"
+    );
+
+const autoStartFocusInput =
+    document.getElementById(
+        "autoStartFocus"
+    );
+
+const soundEnabledInput =
+    document.getElementById(
+        "soundEnabled"
+    );
+
+const notificationsEnabledInput =
+    document.getElementById(
+        "notificationsEnabled"
+    );
+
+
+focusMenuButton.addEventListener(
+    "click",
+    function(event) {
+
+        event.stopPropagation();
+
+        focusMenuPanel.classList.toggle(
+            "show"
+        );
+
+    }
+);
+
+
+focusMenuPanel.addEventListener(
+    "click",
+    function(event) {
+        event.stopPropagation();
+    }
+);
+
+
+document.addEventListener(
+    "click",
+    function() {
+        focusMenuPanel.classList.remove(
+            "show"
+        );
+    }
+);
+
+
+function closeFocusMenu() {
+    focusMenuPanel.classList.remove(
+        "show"
+    );
+}
+
+
+/* =====================================================
+   FOCUS PRESETS
+===================================================== */
+
+document
+    .querySelectorAll(
+        "[data-focus-preset]"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    if (timerRunning || breakMode) {
+                        return;
+                    }
+
+                    const minutes =
+                        Number(
+                            this.dataset.focusPreset
+                        );
+
+                    remainingFocusTime =
+                        minutes * 60;
+
+                    remainingSeconds =
+                        remainingFocusTime;
+
+                    updateTimerDisplay();
+
+                    sessionStatus.textContent =
+                        minutes +
+                        " minute preset selected";
+
+                    closeFocusMenu();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   BREAK DURATION
+===================================================== */
+
+document
+    .querySelectorAll(
+        "[data-break-duration]"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    const minutes =
+                        Number(
+                            this.dataset.breakDuration
+                        );
+
+                    breakDurationMinutes =
+                        minutes;
+
+                    breakTotalSeconds =
+                        minutes * 60;
+
+                    breakDurationText.textContent =
+                        minutes +
+                        (minutes === 1
+                            ? " minute"
+                            : " minutes");
+
+                    sessionStatus.textContent =
+                        "Break duration set to " +
+                        minutes +
+                        " minutes";
+
+                    closeFocusMenu();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =====================================================
+   AUTO START SETTINGS
+===================================================== */
+
+autoStartBreakInput.addEventListener(
+    "change",
+    function() {
+
+        autoStartBreak =
+            this.checked;
+
+    }
+);
+
+
+autoStartFocusInput.addEventListener(
+    "change",
+    function() {
+
+        autoStartFocus =
+            this.checked;
+
+    }
+);
+
+
+/* =====================================================
+   SOUND
+===================================================== */
+
+soundEnabledInput.addEventListener(
+    "change",
+    function() {
+
+        soundEnabled =
+            this.checked;
+
+    }
+);
+
+
+function playCompletionSound() {
+
+    if (!soundEnabled) {
+        return;
+    }
+
+    try {
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        const audioContext =
+            new AudioContext();
+
+        const oscillator =
+            audioContext.createOscillator();
+
+        const gain =
+            audioContext.createGain();
+
+        oscillator.frequency.value = 880;
+        oscillator.type = "sine";
+
+        gain.gain.setValueAtTime(
+            0.0001,
+            audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.18,
+            audioContext.currentTime + 0.02
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audioContext.currentTime + 0.55
+        );
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(
+            audioContext.currentTime + 0.55
+        );
+
+    } catch (error) {
+        /* Sound is optional. */
+    }
+
+}
+
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
+
+notificationsEnabledInput.addEventListener(
+    "change",
+    async function() {
+
+        if (!this.checked) {
+
+            notificationsEnabled = false;
+
+            return;
+
+        }
+
+        if (!("Notification" in window)) {
+
+            this.checked = false;
+
+            alert(
+                "Browser notifications are not supported here."
+            );
+
+            return;
+
+        }
+
+        if (Notification.permission === "granted") {
+
+            notificationsEnabled = true;
+
+            return;
+
+        }
+
+        const permission =
+            await Notification.requestPermission();
+
+        notificationsEnabled =
+            permission === "granted";
+
+        this.checked =
+            notificationsEnabled;
+
+        if (!notificationsEnabled) {
+
+            alert(
+                "Notifications were not enabled. You can allow them in your browser settings."
+            );
+
+        }
+
+    }
+);
+
+
+function sendCompletionNotification(title, body) {
+
+    if (
+        !notificationsEnabled ||
+        !("Notification" in window) ||
+        Notification.permission !== "granted"
+    ) {
+        return;
+    }
+
+    new Notification(
+        title,
+        { body: body }
+    );
+
+}
+
+
+/* =====================================================
+   STRICT DIGITS ONLY
+===================================================== */
+
+const timeInputs = [
+
+    hoursInput,
+    minutesInput,
+    secondsInput
+
+];
+
+
+timeInputs.forEach(
+    input => {
+
+        input.addEventListener(
+            "keydown",
+            function(event) {
+
+                const allowedKeys = [
+
+                    "Backspace",
+                    "Delete",
+                    "ArrowLeft",
+                    "ArrowRight",
+                    "Home",
+                    "End",
+                    "Tab"
+
+                ];
+
+
+                if (
+                    allowedKeys.includes(
+                        event.key
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                   Allow Ctrl/Cmd shortcuts.
+                */
+
+                if (
+                    event.ctrlKey ||
+                    event.metaKey
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                   ONLY 0-9.
+                */
+
+                if (
+                    !/^[0-9]$/.test(
+                        event.key
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                }
+
+            }
+        );
+
+
+        /*
+           Remove everything except digits
+           if something is pasted.
+        */
+
+        input.addEventListener(
+            "input",
+            function() {
+
+                this.value =
+                    this.value.replace(
+                        /[^0-9]/g,
+                        ""
+                    );
+
+
+                validateTypedTime();
+
+            }
+        );
+
+
+        /*
+           Prevent dropping text/emojis/etc.
+        */
+
+        input.addEventListener(
+            "drop",
+            function(event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================================
+   VALIDATE TYPED TIME
+===================================================== */
+
+function validateTypedTime() {
+
+    if (
+        timerRunning ||
+        breakMode
+    ) {
+
+        return;
+
+    }
+
+
+    let h =
+        Number(
+            hoursInput.value || 0
+        );
+
+
+    let m =
+        Number(
+            minutesInput.value || 0
+        );
+
+
+    let s =
+        Number(
+            secondsInput.value || 0
+        );
+
+
+    /*
+       Hours maximum = 99
+    */
+
+    if (h > 99) {
+
+        h = 99;
+
+        hoursInput.value = "99";
+
+    }
+
+
+    /*
+       Minutes maximum = 59
+    */
+
+    if (m > 59) {
+
+        m = 59;
+
+        minutesInput.value = "59";
+
+    }
+
+
+    /*
+       Seconds maximum = 59
+    */
+
+    if (s > 59) {
+
+        s = 59;
+
+        secondsInput.value = "59";
+
+    }
+
+
+    /*
+       If everything is empty,
+       treat it as zero.
+    */
+
+    if (
+        hoursInput.value === "" &&
+        minutesInput.value === "" &&
+        secondsInput.value === ""
+    ) {
+
+        remainingSeconds = 0;
+
+        return;
+
+    }
+
+
+    remainingSeconds =
+        (h * 3600)
+        +
+        (m * 60)
+        +
+        s;
+
+
+    /*
+       Don't allow more than
+       99:59:59.
+    */
+
+    if (
+        remainingSeconds >
+        99 * 3600 + 59 * 60 + 59
+    ) {
+
+        remainingSeconds =
+            99 * 3600
+            +
+            59 * 60
+            +
+            59;
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE TIMER INPUTS
+===================================================== */
+
+function updateTimerDisplay() {
+
+    const hours =
+        Math.floor(
+            remainingSeconds / 3600
+        );
+
+
+    const minutes =
+        Math.floor(
+            (
+                remainingSeconds % 3600
+            ) / 60
+        );
+
+
+    const seconds =
+        remainingSeconds % 60;
+
+
+    hoursInput.value =
+        String(hours).padStart(
+            2,
+            "0"
+        );
+
+
+    minutesInput.value =
+        String(minutes).padStart(
+            2,
+            "0"
+        );
+
+
+    secondsInput.value =
+        String(seconds).padStart(
+            2,
+            "0"
+        );
+
+}
+
+
+/* =====================================================
+   START TIMER
+===================================================== */
+
+function startFocusTimer() {
+
+    if (timerRunning) {
+
+        return;
+
+    }
+
+
+    /*
+       Read whatever the user typed.
+    */
+
+    if (!breakMode) {
+
+        validateTypedTime();
+
+
+        /*
+           Don't allow 0:00:00.
+        */
+
+        if (
+            remainingSeconds <= 0
+        ) {
+
+            alert(
+                "Please enter a time greater than 0."
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    timerRunning = true;
+    timerPaused = false;
+    startTimer.textContent = breakMode
+        ? "⏸ Pause break"
+        : "⏸ Pause focus session";
+    startTimer.title = breakMode
+        ? "Pause break"
+        : "Pause focus session";
+
+
+    startTimer.disabled = false;
+
+    increaseTime.disabled = true;
+
+    decreaseTime.disabled = true;
+
+
+    hoursInput.disabled = true;
+
+    minutesInput.disabled = true;
+
+    secondsInput.disabled = true;
+
+
+    stopTimer.textContent =
+        "■ Stop";
+
+
+    sessionStatus.textContent =
+        breakMode
+        ? "Break in progress"
+        : "Focus session in progress";
+
+
+    timer =
+        setInterval(
+            function() {
+
+                if (
+                    remainingSeconds > 0
+                ) {
+
+                    remainingSeconds--;
+
+                    updateTimerDisplay();
+
+                }
+
+                else {
+
+                    finishSession();
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+/* =====================================================
+   STOP TIMER
+===================================================== */
+
+function stopFocusTimer() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+    timerRunning = false;
+
+
+    startTimer.disabled = false;
+
+    increaseTime.disabled =
+        breakMode;
+
+    decreaseTime.disabled =
+        breakMode;
+
+
+    hoursInput.disabled =
+        breakMode;
+
+    minutesInput.disabled =
+        breakMode;
+
+    secondsInput.disabled =
+        breakMode;
+
+
+    stopTimer.textContent =
+        "↻ Reset";
+
+
+    sessionStatus.textContent =
+        breakMode
+        ? "Break paused"
+        : "Focus session paused";
+
+}
+
+
+/* =====================================================
+   RESET TIMER
+===================================================== */
+
+function resetFocusTimer() {
+
+    clearInterval(timer);
+    timer = null;
+    timerRunning = false;
+    timerPaused = false;
+
+
+    if (breakMode) {
+
+        remainingSeconds =
+            breakTotalSeconds;
+
+        hoursInput.value = "00";
+        minutesInput.value =
+            String(breakDurationMinutes).padStart(2, "0");
+        secondsInput.value = "00";
+
+        hoursInput.disabled = true;
+        minutesInput.disabled = true;
+        secondsInput.disabled = true;
+
+        increaseTime.disabled = true;
+        decreaseTime.disabled = true;
+
+        startTimer.disabled = false;
+        startTimer.textContent = "▶ Start break";
+        startTimer.title = "Start break";
+
+        stopTimer.textContent = "■ Stop";
+        sessionStatus.textContent = "Break ready to start";
+
+        updateSkipBreakButtonVisibility();
+        updateTimerDisplay();
+        return;
+    }
+
+
+    const selectedFocusPreset =
+        document.querySelector(
+            '[data-focus-preset].selected, [data-focus-preset][aria-pressed="true"]'
+        );
+
+    let presetMinutes = focusMinutes;
+
+    if (selectedFocusPreset) {
+        const value =
+            Number(selectedFocusPreset.getAttribute("data-focus-preset"));
+
+        if (Number.isFinite(value) && value > 0) {
+            presetMinutes = value;
+        }
+    }
+
+    remainingFocusTime = presetMinutes * 60;
+    remainingSeconds = remainingFocusTime;
+
+    hoursInput.value =
+        String(Math.floor(presetMinutes / 60)).padStart(2, "0");
+    minutesInput.value =
+        String(presetMinutes % 60).padStart(2, "0");
+    secondsInput.value = "00";
+
+    enableFocusInputs();
+
+    startTimer.disabled = false;
+    startTimer.textContent = "▶ Start focus session";
+    startTimer.title = "Start focus session";
+
+    stopTimer.textContent = "■ Stop";
+    sessionStatus.textContent = "Ready to start";
+
+    updateSkipBreakButtonVisibility();
+    updateTimerDisplay();
+
+}
+
+
+/* =====================================================
+   STOP / RESET BUTTON
+===================================================== */
+
+stopTimer.addEventListener(
+    "click",
+    function() {
+
+        if (timerRunning) {
+            clearInterval(timer);
+            timer = null;
+            timerRunning = false;
+            timerPaused = true;
+
+            startTimer.disabled = false;
+            startTimer.textContent = breakMode
+                ? "▶ Resume break"
+                : "▶ Resume focus session";
+
+            startTimer.title = breakMode
+                ? "Resume break"
+                : "Resume focus session";
+
+            stopTimer.textContent = "■ Reset";
+            sessionStatus.textContent = breakMode
+                ? "Break paused"
+                : "Focus session paused";
+
+            return;
+        }
+
+        if (timerPaused) {
+            resetFocusTimer();
+            return;
+        }
+
+        resetFocusTimer();
+    }
+);
+
+
+/* =====================================================
+   START BUTTON
+===================================================== */
+
+startTimer.addEventListener(
+    "click",
+    function() {
+
+        if (timerRunning) {
+            clearInterval(timer);
+            timer = null;
+            timerRunning = false;
+            timerPaused = true;
+
+            startTimer.disabled = false;
+            startTimer.textContent = breakMode
+                ? "▶ Resume break"
+                : "▶ Resume focus session";
+            startTimer.title = breakMode
+                ? "Resume break"
+                : "Resume focus session";
+
+            sessionStatus.textContent = breakMode
+                ? "Break paused"
+                : "Focus session paused";
+
+            return;
+        }
+
+        if (timerPaused) {
+            timerPaused = false;
+            startFocusTimer();
+
+            startTimer.disabled = false;
+            startTimer.textContent = breakMode
+                ? "⏸ Pause break"
+                : "⏸ Pause focus session";
+
+            return;
+        }
+
+        startFocusTimer();
+    }
+);
+
+
+/* =====================================================
+   INCREASE TIMER
+===================================================== */
+
+increaseTime.addEventListener(
+    "click",
+    function() {
+
+        if (
+            timerRunning ||
+            breakMode
+        ) {
+
+            return;
+
+        }
+
+
+        validateTypedTime();
+
+
+        /*
+           Increase by 1 minute.
+        */
+
+        remainingSeconds += 60;
+
+
+        /*
+           Maximum 99:59:59
+        */
+
+        const maxTime =
+            99 * 3600
+            +
+            59 * 60
+            +
+            59;
+
+
+        if (
+            remainingSeconds >
+            maxTime
+        ) {
+
+            remainingSeconds =
+                maxTime;
+
+        }
+
+
+        updateTimerDisplay();
+
+    }
+);
+
+
+/* =====================================================
+   DECREASE TIMER
+===================================================== */
+
+decreaseTime.addEventListener(
+    "click",
+    function() {
+
+        if (
+            timerRunning ||
+            breakMode
+        ) {
+
+            return;
+
+        }
+
+
+        validateTypedTime();
+
+
+        /*
+           Decrease by 1 minute.
+        */
+
+        remainingSeconds -= 60;
+
+
+        /*
+           Don't go below zero.
+        */
+
+        if (
+            remainingSeconds < 0
+        ) {
+
+            remainingSeconds = 0;
+
+        }
+
+
+        updateTimerDisplay();
+
+    }
+);
+
+
+/* =====================================================
+   FINISH SESSION
+===================================================== */
+
+function finishSession() {
+
+    clearInterval(timer);
+
+    timer = null;
+
+    timerRunning = false;
+
+
+    /*
+       FOCUS COMPLETED
+    */
+
+    if (!breakMode) {
+
+
+        /*
+           Calculate completed minutes.
+        */
+
+        const completed =
+            Math.floor(
+                remainingFocusTime / 60
+            );
+
+
+        addFocusMinutes(
+            completed
+        );
+
+
+        /*
+           Skip break
+        */
+
+        if (
+            skipBreak.checked
+        ) {
+
+            breakMode = false;
+
+
+            remainingSeconds =
+                getCurrentFocusDuration();
+
+
+            enableFocusInputs();
+
+
+            stopTimer.textContent =
+                "■ Stop";
+
+
+            sessionStatus.textContent =
+                "Focus session complete";
+
+
+            updateTimerDisplay();
+
+
+            playCompletionSound();
+
+            sendCompletionNotification(
+                "Focus session complete",
+                "Your focus session is complete."
+            );
+
+
+            alert(
+                "Focus session complete!"
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+           Start 5-minute break.
+        */
+
+        breakMode = true;
+
+
+        
+        startTimer.textContent = "⏸ Pause break";
+        startTimer.title = "Pause break";
+
+        remainingSeconds =
+            breakTotalSeconds;
+
+
+        hoursInput.disabled = true;
+
+        minutesInput.disabled = true;
+
+        secondsInput.disabled = true;
+
+
+        increaseTime.disabled = true;
+
+        decreaseTime.disabled = true;
+
+
+        startTimer.disabled = false;
+
+
+        stopTimer.textContent =
+            "■ Stop";
+
+
+        sessionStatus.textContent =
+            breakDurationMinutes +
+            " minute break";
+
+
+        updateTimerDisplay();
+
+
+        playCompletionSound();
+
+        sendCompletionNotification(
+            "Focus session complete",
+            "Your break is ready."
+        );
+
+        if (autoStartBreak) {
+
+            alert(
+                "Focus complete! Your " +
+                breakDurationMinutes +
+                " minute break is starting."
+            );
+
+            startFocusTimer();
+
+        }
+        else {
+
+            alert(
+                "Focus complete! Your " +
+                breakDurationMinutes +
+                " minute break is ready."
+            );
+
+        }
+
+    }
+
+    else {
+
+
+        /*
+           BREAK COMPLETED
+        */
+
+        breakMode = false;
+
+        updateSkipBreakButtonVisibility();
+
+
+        remainingSeconds =
+            getCurrentFocusDuration();
+
+
+        enableFocusInputs();
+
+
+        stopTimer.textContent =
+            "■ Stop";
+
+
+        sessionStatus.textContent =
+            "Break complete. Ready to focus";
+
+
+        updateTimerDisplay();
+
+
+        playCompletionSound();
+
+        sendCompletionNotification(
+            "Break complete",
+            "Time to focus again."
+        );
+
+
+        if (autoStartFocus) {
+
+            startFocusTimer();
+
+        }
+        else {
+
+            alert(
+                "Break complete! Time to focus again."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   SKIP BREAK
+===================================================== */
+
+skipBreakButton.addEventListener(
+    "click",
+    function() {
+
+        if (!breakMode) {
+            return;
+        }
+
+        clearInterval(timer);
+        timer = null;
+        timerRunning = false;
+        timerPaused = false;
+        breakMode = false;
+
+        const selectedFocusPreset =
+            document.querySelector(
+                '[data-focus-preset].selected, [data-focus-preset][aria-pressed="true"]'
+            );
+
+        let presetMinutes = focusMinutes;
+
+        if (selectedFocusPreset) {
+            const value =
+                Number(selectedFocusPreset.getAttribute("data-focus-preset"));
+
+            if (Number.isFinite(value) && value > 0) {
+                presetMinutes = value;
+            }
+        }
+
+        remainingFocusTime = presetMinutes * 60;
+        remainingSeconds = remainingFocusTime;
+
+        hoursInput.value =
+            String(Math.floor(presetMinutes / 60)).padStart(2, "0");
+        minutesInput.value =
+            String(presetMinutes % 60).padStart(2, "0");
+        secondsInput.value =
+            "00";
+
+        enableFocusInputs();
+        updateSkipBreakButtonVisibility();
+        updateTimerDisplay();
+
+        startFocusTimer();
+
+    }
+);
+
+
+/* =====================================================
+   REMEMBER FOCUS DURATION
+===================================================== */
+
+let remainingFocusTime =
+    25 * 60;
+
+
+function getCurrentFocusDuration() {
+
+    return remainingFocusTime;
+
+}
+
+
+/*
+   Store the focus duration when
+   the user starts.
+*/
+
+const originalStart =
+    startFocusTimer;
+
+
+/*
+   We don't replace the function.
+   Instead, capture duration when
+   Start is clicked.
+*/
+
+startTimer.addEventListener(
+    "click",
+    function() {
+
+        if (
+            !breakMode &&
+            !timerRunning
+        ) {
+
+            validateTypedTime();
+
+
+            if (
+                remainingSeconds > 0
+            ) {
+
+                remainingFocusTime =
+                    remainingSeconds;
+
+            }
+
+        }
+
+    },
+    true
+);
+
+
+/* =====================================================
+   ENABLE FOCUS INPUTS
+===================================================== */
+
+function enableFocusInputs() {
+
+    startTimer.disabled = false;
+
+    increaseTime.disabled = false;
+
+    decreaseTime.disabled = false;
+
+
+    hoursInput.disabled = false;
+
+    minutesInput.disabled = false;
+
+    secondsInput.disabled = false;
+
+}
+
+
+/* =====================================================
+   DAILY PROGRESS
+===================================================== */
+
+let completedMinutes = 0;
+
+let goalHours = 1;
+
+
+function addFocusMinutes(minutes) {
+
+    if (
+        minutes <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    completedMinutes +=
+        minutes;
+
+
+    document.getElementById(
+        "completedText"
+    ).textContent =
+        "Completed: "
+        +
+        completedMinutes
+        +
+        " minutes";
+
+
+    updateProgress();
+
+}
+
+
+function updateProgress() {
+
+    const goalMinutes =
+        goalHours * 60;
+
+
+    const percentage =
+        Math.min(
+            (
+                completedMinutes /
+                goalMinutes
+            ) * 100,
+            100
+        );
+
+
+    document.querySelector(
+        ".progress-circle"
+    ).style.background =
+        `
+        conic-gradient(
+            #247c8a
+            ${percentage}%,
+            #eeeeee
+            ${percentage}%
+        )
+        `;
+
+}
+
+
+/* =====================================================
+   EDIT GOAL
+===================================================== */
+
+document.getElementById(
+    "editGoal"
+).addEventListener(
+    "click",
+    function() {
+
+        const newGoal =
+            prompt(
+                "Enter daily goal in hours:",
+                goalHours
+            );
+
+
+        if (
+            newGoal !== null &&
+            !isNaN(newGoal) &&
+            Number(newGoal) > 0
+        ) {
+
+            goalHours =
+                Number(newGoal);
+
+
+            document.getElementById(
+                "goalNumber"
+            ).textContent =
+                goalHours;
+
+
+            updateProgress();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   TASK DATA
+===================================================== */
+
+let tasks =
+    JSON.parse(
+        localStorage.getItem(
+            "focusTasks"
+        )
+    ) || [
+
+        {
+            id: 1,
+            title: "Chemistry notes",
+            date: "2026-09-04",
+            time: "10:00",
+            description: "",
+            completed: false
+        },
+
+        {
+            id: 2,
+            title: "Write hindi notes",
+            date: "2026-09-04",
+            time: "12:00",
+            description: "",
+            completed: false
+        },
+
+        {
+            id: 3,
+            title: "Send math homework",
+            date: "2026-09-05",
+            time: "16:00",
+            description: "",
+            completed: false
+        },
+
+        {
+            id: 4,
+            title: "Complete project",
+            date: "2026-09-07",
+            time: "11:00",
+            description: "",
+            completed: false
+        }
+
+    ];
+
+
+let selectedDate =
+    getTodayDate();
+
+
+let currentDate =
+    new Date();
+
+
+let currentTaskView =
+    "daily";
+
+
+function saveTasks() {
+
+    localStorage.setItem(
+        "focusTasks",
+        JSON.stringify(tasks)
+    );
+
+}
+
+
+/* =====================================================
+   DATE FUNCTIONS
+===================================================== */
+
+function getTodayDate() {
+
+    return formatDate(
+        new Date()
+    );
+
+}
+
+
+function formatDate(date) {
+
+    return (
+        date.getFullYear()
+        +
+        "-"
+        +
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0")
+        +
+        "-"
+        +
+        String(
+            date.getDate()
+        ).padStart(2, "0")
+    );
+
+}
+
+
+function getDateFromKey(key) {
+
+    return new Date(
+        key + "T00:00:00"
+    );
+
+}
+
+
+function readableDate(key) {
+
+    return getDateFromKey(key)
+        .toLocaleDateString(
+            "en-US",
+            {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+                year: "numeric"
+            }
+        );
+
+}
+
+
+/* =====================================================
+   RENDER TASK VIEW
+===================================================== */
+
+function renderTasks() {
+
+    const content =
+        document.getElementById(
+            "taskContent"
+        );
+
+
+    /*
+       DAILY
+    */
+
+    if (
+        currentTaskView === "daily"
+    ) {
+
+        content.className =
+            "task-content show-daily";
+
+
+        renderDaily();
+
+    }
+
+
+    /*
+       WEEKLY
+    */
+
+    else if (
+        currentTaskView === "weekly"
+    ) {
+
+        content.className =
+            "task-content show-calendar";
+
+
+        renderWeekly();
+
+    }
+
+
+    /*
+       MONTHLY
+    */
+
+    else if (
+        currentTaskView === "monthly"
+    ) {
+
+        content.className =
+            "task-content show-calendar";
+
+
+        renderMonthly();
+
+    }
+
+
+    /*
+       YEARLY
+    */
+
+    else if (
+        currentTaskView === "yearly"
+    ) {
+
+        content.className =
+            "task-content show-calendar";
+
+
+        renderYearly();
+
+    }
+
+}
+
+
+/* =====================================================
+   DAILY VIEW
+===================================================== */
+
+function renderDaily() {
+
+    const list =
+        document.getElementById(
+            "dailyTasks"
+        );
+
+
+    const calendar =
+        document.getElementById(
+            "calendarContainer"
+        );
+
+
+    calendar.innerHTML = "";
+
+
+    const dayTasks =
+        tasks.filter(
+            task =>
+                task.date ===
+                selectedDate
+        );
+
+
+    if (
+        dayTasks.length === 0
+    ) {
+
+        list.innerHTML = `
+
+            <div
+                style="
+                text-align:center;
+                color:#777;
+                padding:35px 10px;
+                font-size:13px;
+                "
+            >
+
+                No tasks for
+
+                <br><br>
+
+                <strong>
+                    ${readableDate(
+                        selectedDate
+                    )}
+                </strong>
+
+                <br><br>
+
+                Click + to add a task.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        dayTasks
+        .map(
+            task => `
+
+            <div class="task-item">
+
+
+                <input
+                    type="checkbox"
+                    class="task-checkbox"
+
+                    ${
+                        task.completed
+                        ? "checked"
+                        : ""
+                    }
+
+                    onchange="
+                        toggleTask(${task.id})
+                    "
+                >
+
+
+                <div class="task-details">
+
+
+                    <div
+                        class="
+                        task-name
+                        ${
+                            task.completed
+                            ? "task-completed"
+                            : ""
+                        }
+                        "
+                    >
+
+                        ${escapeHTML(
+                            task.title
+                        )}
+
+                    </div>
+
+
+                    <div class="task-time">
+
+                        ${
+                            task.time
+                            ? task.time
+                            : "No time set"
+                        }
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="task-actions">
+
+
+                    <button
+                        class="task-action"
+                        onclick="
+                            editTask(${task.id})
+                        "
+                    >
+                        ✎
+                    </button>
+
+
+                    <button
+                        class="task-action"
+                        onclick="
+                            deleteTask(${task.id})
+                        "
+                    >
+                        🗑
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+        `
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   WEEKLY VIEW
+===================================================== */
+
+function renderWeekly() {
+
+    const calendar =
+        document.getElementById(
+            "calendarContainer"
+        );
+
+
+    const list =
+        document.getElementById(
+            "dailyTasks"
+        );
+
+
+    list.innerHTML = "";
+
+
+    const start =
+        new Date(
+            currentDate
+        );
+
+
+    start.setDate(
+        currentDate.getDate()
+        -
+        currentDate.getDay()
+    );
+
+
+    let html =
+        '<div class="week-view">';
+
+
+    for (
+        let i = 0;
+        i < 7;
+        i++
+    ) {
+
+        const date =
+            new Date(start);
+
+
+        date.setDate(
+            start.getDate() + i
+        );
+
+
+        const key =
+            formatDate(date);
+
+
+        const dayTasks =
+            tasks.filter(
+                task =>
+                    task.date === key
+            );
+
+
+        html += `
+
+            <div
+                class="week-day"
+                onclick="
+                    selectDate('${key}')
+                "
+            >
+
+
+                <div class="week-day-header">
+
+                    ${date.toLocaleDateString(
+                        "en-US",
+                        {
+                            weekday: "short"
+                        }
+                    )}
+
+                    <br>
+
+                    ${date.getDate()}
+
+                </div>
+
+
+        `;
+
+
+        if (
+            dayTasks.length === 0
+        ) {
+
+            html += `
+
+                <div
+                    style="
+                    color:#aaa;
+                    font-size:9px;
+                    text-align:center;
+                    margin-top:12px;
+                    "
+                >
+                    No tasks
+                </div>
+
+            `;
+
+        }
+
+
+        dayTasks.forEach(
+            task => {
+
+                html += `
+
+                    <div class="week-task">
+
+                        ${escapeHTML(
+                            task.title
+                        )}
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        html += "</div>";
+
+    }
+
+
+    html += "</div>";
+
+
+    calendar.innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   MONTHLY VIEW
+===================================================== */
+
+function renderMonthly() {
+
+    const calendar =
+        document.getElementById(
+            "calendarContainer"
+        );
+
+
+    document.getElementById(
+        "dailyTasks"
+    ).innerHTML = "";
+
+
+    const year =
+        currentDate.getFullYear();
+
+
+    const month =
+        currentDate.getMonth();
+
+
+    const first =
+        new Date(
+            year,
+            month,
+            1
+        );
+
+
+    const startDay =
+        first.getDay();
+
+
+    const days =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
+
+
+    let html = `
+
+        <div class="month-header">
+
+
+            <div class="month-title">
+
+                ${first.toLocaleString(
+                    "en-US",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                )}
+
+            </div>
+
+
+            <div class="calendar-nav">
+
+
+                <button
+                    onclick="
+                        changeMonth(-1)
+                    "
+                >
+                    ‹
+                </button>
+
+
+                <button
+                    onclick="
+                        changeMonth(1)
+                    "
+                >
+                    ›
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="calendar-weekdays">
+
+            <div>S</div>
+            <div>M</div>
+            <div>T</div>
+            <div>W</div>
+            <div>T</div>
+            <div>F</div>
+            <div>S</div>
+
+        </div>
+
+
+        <div class="month-grid">
+
+    `;
+
+
+    /*
+       Blank cells before
+       first day.
+    */
+
+    for (
+        let i = 0;
+        i < startDay;
+        i++
+    ) {
+
+        html += `
+
+            <div
+                class="
+                calendar-day
+                other-month
+                "
+            ></div>
+
+        `;
+
+    }
+
+
+    /*
+       Actual dates.
+    */
+
+    for (
+        let day = 1;
+        day <= days;
+        day++
+    ) {
+
+        const date =
+            new Date(
+                year,
+                month,
+                day
+            );
+
+
+        const key =
+            formatDate(date);
+
+
+        const dayTasks =
+            tasks.filter(
+                task =>
+                    task.date === key
+            );
+
+
+        const isToday =
+            key === getTodayDate();
+
+
+        html += `
+
+            <div
+                class="
+                calendar-day
+                ${
+                    isToday
+                    ? "today"
+                    : ""
+                }
+                "
+                onclick="
+                    selectDate('${key}')
+                "
+            >
+
+
+                <div class="day-number">
+
+                    ${day}
+
+                </div>
+
+
+        `;
+
+
+        if (
+            dayTasks.length > 0
+        ) {
+
+            html += `
+
+                <div class="day-task-dot">
+
+                    ${dayTasks.length}
+                    task${dayTasks.length > 1 ? "s" : ""}
+
+                </div>
+
+            `;
+
+        }
+
+
+        html += "</div>";
+
+    }
+
+
+    /*
+       Fill remaining cells.
+    */
+
+    const totalCells =
+        startDay + days;
+
+
+    const remaining =
+        42 - totalCells;
+
+
+    for (
+        let i = 0;
+        i < remaining;
+        i++
+    ) {
+
+        html += `
+
+            <div
+                class="
+                calendar-day
+                other-month
+                "
+            ></div>
+
+        `;
+
+    }
+
+
+    html += "</div>";
+
+
+    calendar.innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   YEARLY VIEW
+===================================================== */
+
+function renderYearly() {
+
+    const calendar =
+        document.getElementById(
+            "calendarContainer"
+        );
+
+
+    document.getElementById(
+        "dailyTasks"
+    ).innerHTML = "";
+
+
+    const year =
+        currentDate.getFullYear();
+
+
+    let html =
+        '<div class="year-view">';
+
+
+    for (
+        let month = 0;
+        month < 12;
+        month++
+    ) {
+
+        const first =
+            new Date(
+                year,
+                month,
+                1
+            );
+
+
+        const start =
+            first.getDay();
+
+
+        const days =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+
+        html += `
+
+            <div class="year-month">
+
+
+                <div class="year-month-title">
+
+                    ${first.toLocaleString(
+                        "en-US",
+                        {
+                            month: "short"
+                        }
+                    )}
+
+                </div>
+
+
+                <div class="year-days">
+
+                    <span>S</span>
+                    <span>M</span>
+                    <span>T</span>
+                    <span>W</span>
+                    <span>T</span>
+                    <span>F</span>
+                    <span>S</span>
+
+        `;
+
+
+        for (
+            let i = 0;
+            i < start;
+            i++
+        ) {
+
+            html += "<span></span>";
+
+        }
+
+
+        for (
+            let day = 1;
+            day <= days;
+            day++
+        ) {
+
+            const date =
+                new Date(
+                    year,
+                    month,
+                    day
+                );
+
+
+            const key =
+                formatDate(date);
+
+
+            const hasTask =
+                tasks.some(
+                    task =>
+                        task.date === key
+                );
+
+
+            html += `
+
+                <span
+                    class="
+                    year-day
+                    ${
+                        hasTask
+                        ? "has-task"
+                        : ""
+                    }
+                    "
+                    onclick="
+                        selectDate('${key}')
+                    "
+                >
+
+                    ${day}
+
+                </span>
+
+            `;
+
+        }
+
+
+        html += `
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    html += "</div>";
+
+
+    calendar.innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   CLICKING A DATE
+===================================================== */
+
+function selectDate(date) {
+
+    selectedDate =
+        date;
+
+
+    currentDate =
+        getDateFromKey(date);
+
+
+    /*
+       Any date clicked in
+       Weekly / Monthly / Yearly
+       opens Daily view.
+    */
+
+    currentTaskView =
+        "daily";
+
+
+    updateViewButtons();
+
+    renderTasks();
+
+}
+
+
+/* =====================================================
+   VIEW BUTTONS
+===================================================== */
+
+document
+    .querySelectorAll(
+        ".view-button"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function() {
+
+                    currentTaskView =
+                        this.dataset.view;
+
+
+                    updateViewButtons();
+
+                    renderTasks();
+
+                }
+            );
+
+        }
+    );
+
+
+function updateViewButtons() {
+
+    document
+        .querySelectorAll(
+            ".view-button"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    button.dataset.view ===
+                    currentTaskView
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   MONTH NAVIGATION
+===================================================== */
+
+function changeMonth(amount) {
+
+    currentDate.setMonth(
+        currentDate.getMonth()
+        +
+        amount
+    );
+
+
+    renderTasks();
+
+}
+
+
+/* =====================================================
+   TASK MODAL
+===================================================== */
+
+const taskModal =
+    document.getElementById(
+        "taskModal"
+    );
+
+
+function openTaskModal(
+    task = null
+) {
+
+    taskModal.classList.add(
+        "show"
+    );
+
+
+    if (task) {
+
+
+        document.getElementById(
+            "modalHeading"
+        ).textContent =
+            "Edit task";
+
+
+        document.getElementById(
+            "editTaskId"
+        ).value =
+            task.id;
+
+
+        document.getElementById(
+            "taskName"
+        ).value =
+            task.title;
+
+
+        document.getElementById(
+            "taskDate"
+        ).value =
+            task.date;
+
+
+        document.getElementById(
+            "taskTime"
+        ).value =
+            task.time;
+
+
+        document.getElementById(
+            "taskDescription"
+        ).value =
+            task.description;
+
+    }
+
+    else {
+
+
+        document.getElementById(
+            "modalHeading"
+        ).textContent =
+            "Add task";
+
+
+        document.getElementById(
+            "editTaskId"
+        ).value =
+            "";
+
+
+        document.getElementById(
+            "taskName"
+        ).value =
+            "";
+
+
+        document.getElementById(
+            "taskDate"
+        ).value =
+            selectedDate;
+
+
+        document.getElementById(
+            "taskTime"
+        ).value =
+            "";
+
+
+        document.getElementById(
+            "taskDescription"
+        ).value =
+            "";
+
+    }
+
+}
+
+
+/* =====================================================
+   ADD TASK
+===================================================== */
+
+document.getElementById(
+    "addTaskButton"
+).addEventListener(
+    "click",
+    function() {
+
+        openTaskModal();
+
+    }
+);
+
+
+/* =====================================================
+   SAVE TASK
+===================================================== */
+
+document.getElementById(
+    "taskForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const id =
+            document.getElementById(
+                "editTaskId"
+            ).value;
+
+
+        const title =
+            document.getElementById(
+                "taskName"
+            ).value.trim();
+
+
+        const date =
+            document.getElementById(
+                "taskDate"
+            ).value;
+
+
+        const time =
+            document.getElementById(
+                "taskTime"
+            ).value;
+
+
+        const description =
+            document.getElementById(
+                "taskDescription"
+            ).value.trim();
+
+
+        if (
+            !title ||
+            !date
+        ) {
+
+            return;
+
+        }
+
+
+        if (id) {
+
+            const index =
+                tasks.findIndex(
+                    task =>
+                        task.id ===
+                        Number(id)
+                );
+
+
+            if (
+                index !== -1
+            ) {
+
+                tasks[index].title =
+                    title;
+
+                tasks[index].date =
+                    date;
+
+                tasks[index].time =
+                    time;
+
+                tasks[index].description =
+                    description;
+
+            }
+
+        }
+
+        else {
+
+            tasks.push({
+
+                id: Date.now(),
+
+                title: title,
+
+                date: date,
+
+                time: time,
+
+                description:
+                    description,
+
+                completed: false
+
+            });
+
+        }
+
+
+        saveTasks();
+
+
+        selectedDate =
+            date;
+
+
+        currentDate =
+            getDateFromKey(date);
+
+
+        currentTaskView =
+            "daily";
+
+
+        updateViewButtons();
+
+        closeTaskModal();
+
+        renderTasks();
+
+    }
+);
+
+
+/* =====================================================
+   CLOSE MODAL
+===================================================== */
+
+function closeTaskModal() {
+
+    taskModal.classList.remove(
+        "show"
+    );
+
+}
+
+
+document.getElementById(
+    "cancelTask"
+).addEventListener(
+    "click",
+    closeTaskModal
+);
+
+
+/* =====================================================
+   EDIT TASK
+===================================================== */
+
+function editTask(id) {
+
+    const task =
+        tasks.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (task) {
+
+        openTaskModal(task);
+
+    }
+
+}
+
+
+/* =====================================================
+   DELETE TASK
+===================================================== */
+
+function deleteTask(id) {
+
+    if (
+        !confirm(
+            "Delete this task?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    tasks =
+        tasks.filter(
+            task =>
+                task.id !== id
+        );
+
+
+    saveTasks();
+
+    renderTasks();
+
+}
+
+
+/* =====================================================
+   COMPLETE TASK
+===================================================== */
+
+function toggleTask(id) {
+
+    const task =
+        tasks.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!task) {
+
+        return;
+
+    }
+
+
+    task.completed =
+        !task.completed;
+
+
+    saveTasks();
+
+    renderTasks();
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(text) {
+
+    return String(text)
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                }[character];
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+remainingFocusTime =
+    25 * 60;
+
+
+remainingSeconds =
+    25 * 60;
+
+
+updateTimerDisplay();
+
+breakDurationText.textContent =
+    breakDurationMinutes +
+    " minutes";
+
+renderTasks();
+
+updateProgress();
+
+
+document.querySelectorAll("[data-focus-preset]").forEach(function(button) {
+    button.addEventListener("click", function() {
+        document.querySelectorAll("[data-focus-preset]").forEach(function(item) {
+            item.classList.remove("selected");
+            item.setAttribute("aria-pressed", "false");
+        });
+        button.classList.add("selected");
+        button.setAttribute("aria-pressed", "true");
+    });
+});
+
+(function() {
+    const defaultPreset = document.querySelector('[data-focus-preset="25"]');
+    if (defaultPreset) {
+        defaultPreset.classList.add("selected");
+        defaultPreset.setAttribute("aria-pressed", "true");
+    }
+})();
+
+updateSkipBreakButtonVisibility();
+</script>
+
+</body>
+
+</html>
